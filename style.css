@@ -1,0 +1,70 @@
+/* === Reset & Base === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f6f9;
+  color: #333;
+  line-height: 1.7;
+}
+
+/* === Header === */
+header {
+  background-color: #1a1a2e;
+  color: #fff;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+header p {
+  font-size: 1rem;
+  color: #a0c4ff;
+}
+
+/* === Main === */
+main {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+section {
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+}
+
+section h2 {
+  font-size: 1.3rem;
+  color: #1a1a2e;
+  margin-bottom: 12px;
+  border-bottom: 2px solid #a0c4ff;
+  padding-bottom: 6px;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+ul li {
+  margin-bottom: 8px;
+}
+
+/* === Footer === */
+footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 0.85rem;
+  color: #888;
+}
