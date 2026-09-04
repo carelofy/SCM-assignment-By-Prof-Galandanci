@@ -1,5 +1,6 @@
 import datetime
 import json
+from pathlib import Path
 
 
 class Book:
@@ -18,6 +19,12 @@ class Book:
             "total_copies": self.total_copies,
             "available_copies": self.available_copies
         }
+
+    @classmethod
+    def from_dict(cls, data):
+        book = cls(data["isbn"], data["title"], data["author"], data["total_copies"])
+        book.available_copies = data["available_copies"]
+        return book
 
 
 class Member:
@@ -38,6 +45,16 @@ class Member:
             },
             "fines": self.fines
         }
+
+    @classmethod
+    def from_dict(cls, data):
+        member = cls(data["member_id"], data["name"], data["email"])
+        member.borrowed_books = {
+            isbn: datetime.date.fromisoformat(due_date)
+            for isbn, due_date in data.get("borrowed_books", {}).items()
+        }
+        member.fines = float(data.get("fines", 0.0))
+        return member
 
 
 class Library:
@@ -141,9 +158,31 @@ class Library:
         with open(filepath, "w") as f:
             json.dump(state, f, indent=2)
 
+    def load_state(self, filepath):
+        """Restore previously exported books and members from a JSON state file."""
+        with open(filepath, "r") as f:
+            state = json.load(f)
+
+        self.books = {
+            data["isbn"]: Book.from_dict(data)
+            for data in state.get("books", [])
+        }
+        self.members = {
+            data["member_id"]: Member.from_dict(data)
+            for data in state.get("members", [])
+        }
+        return len(self.books), len(self.members)
+
 
 def demo():
     lib = Library()
+    state_file = Path("library_state.json")
+
+    if state_file.exists():
+        books, members = lib.load_state(state_file)
+        print(f"Loaded saved state: {books} books, {members} members")
+        return
+
     lib.add_book("111", "Clean Code", "Robert C. Martin", 2)
     lib.add_book("222", "The Pragmatic Programmer", "Andrew Hunt", 1)
     lib.register_member("M1", "Ada Lovelace", "ada@example.com")
@@ -158,7 +197,8 @@ def demo():
     results = lib.search_by_title("clean")
     print("Search results:", [b.title for b in results])
 
-    lib.export_state(state_file)\n    print(f\"Saved library state to {state_file}\")
+    lib.export_state(state_file)
+    print(f"Saved library state to {state_file}")
 
 
 if __name__ == "__main__":
